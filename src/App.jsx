@@ -1,10 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import TodoForm from './components/TodoForm'
 import TodoItem from './components/TodoItem'
 
 function App() {
-	const [todos, setTodos] = useState([])
+
+	const getList = () => {
+		const items = JSON.parse(localStorage.getItem('todos'))
+		return items;
+	}
+
+	const [todos, setTodos] = useState(getList ? getList : [])
+
+	useEffect(() => {
+		localStorage.setItem('todos', JSON.stringify(todos))
+	}, [todos])
 
 	const addTask = userInput => {
 		if (userInput) {
@@ -15,7 +25,7 @@ function App() {
 			}
 			setTodos([...todos, newTask])
 		}
-	} 
+	}
 
 	const removeTask = id => {
 		setTodos([...todos.filter(todo => todo.id !== id)])
